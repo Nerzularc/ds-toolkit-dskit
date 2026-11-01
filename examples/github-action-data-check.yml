@@ -1,0 +1,28 @@
+# Copy to .github/workflows/data-check.yml in a client repository.
+# Every push / pull request that touches data/ is validated against the data
+# contract; the HTML report is uploaded as an artifact either way.
+name: Data contract check
+
+on:
+  push:
+    paths: ["data/**", "rules/**"]
+  pull_request:
+    paths: ["data/**", "rules/**"]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install git+https://github.com/YOUR_USERNAME/ds-toolkit.git
+      - name: Validate
+        run: dskit validate data/raw/customers.csv --rules rules/data_contract.yaml -o reports/validation.html
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-report
+          path: reports/validation.html

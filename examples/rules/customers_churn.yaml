@@ -1,0 +1,36 @@
+# Data contract for the monthly customer export from the client's CRM.
+# Run:  dskit validate examples/data/customers_churn.csv --rules examples/rules/customers_churn.yaml
+min_rows: 1000
+max_duplicate_rows: 0
+columns:
+  customer_id:
+    not_null: true
+    unique: true
+    regex: '^CUST-\d{5}$'
+  signup_date:
+    type: date
+    not_after: today
+  age:
+    min: 17
+    max: 100
+    max_missing: 0.10
+    severity: warn
+  city:
+    allowed: [Jakarta, Surabaya, Bandung, Medan, Makassar, Semarang]
+  contract:
+    allowed: [Month-to-month, One year, Two year]
+  internet_service:
+    allowed: [Fiber, DSL, None]
+  monthly_charges:
+    not_null: true
+    min: 0
+    max: 500
+  total_charges:
+    min: 0
+  churn:
+    not_null: true
+    allowed: ["Yes", "No"]
+row_checks:
+  - name: total charges ≥ monthly charges
+    expr: total_charges >= monthly_charges
+    severity: warn
