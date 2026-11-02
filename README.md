@@ -1,4 +1,5 @@
-# dskit — a data science toolkit for client & remote work
+# A Practical Data Science Workflow & Reporting Toolkit
+dskit — a data science toolkit for client & remote work
 
 > One command turns a raw client file into a report the client can read.
 > Profile → validate → clean → model → forecast → A/B test → segment,
